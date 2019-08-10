@@ -9,6 +9,10 @@ import java.util.List;
 public class StaticListBookStorageImpl implements BookStorage {
     private static List<Book> bookStorage = new ArrayList<>();
 
+    public List<Book> getBookStorage() {
+        return bookStorage;
+    }
+
     @Override
     public Book getBook(long id) {
         for (Book book : bookStorage){
