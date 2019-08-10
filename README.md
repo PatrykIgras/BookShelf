@@ -1,4 +1,4 @@
-# BookShelfAppi  [![Build Status](https://travis-ci.org/PatrykIgras/)](https://travis-ci.org/PatrykIgras/)
+# BookShelfAppi  [![Build Status](https://travis-ci.org/PatrykIgras/BookShelf.svg?branch=master)](https://travis-ci.org/PatrykIgras/BookShelf)
 
 #### Technologies
 
