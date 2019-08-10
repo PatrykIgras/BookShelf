@@ -5,11 +5,8 @@ import com.example.bookshelf.storage.impl.StaticListBookStorageImpl;
 import com.example.bookshelf.type.Book;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.InternalError;
 import fi.iki.elonen.NanoHTTPD;
-import org.omg.CORBA.INTERNAL;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
