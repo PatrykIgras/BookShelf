@@ -4,5 +4,6 @@
 
 - Java 8
 - Maven
+- JUnit
 - REST
 - Travis CI
