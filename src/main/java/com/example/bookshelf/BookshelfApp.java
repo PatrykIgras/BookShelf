@@ -1,12 +1,13 @@
 package com.example.bookshelf;
 
+import com.example.bookshelf.storage.impl.StaticListBookStorageImpl;
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.IOException;
 
 public class BookshelfApp extends NanoHTTPD {
     RequestUrlMapper requestUrlMapper = new RequestUrlMapper();
-
+    StaticListBookStorageImpl storage = new StaticListBookStorageImpl();
     public BookshelfApp(int port) throws IOException {
         super(port);
         start(5000, false);

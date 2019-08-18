@@ -32,4 +32,8 @@ public class StaticListBookStorageImpl implements BookStorage {
     public void addBook(Book book) {
         bookStorage.add(book);
     }
+
+    public void clearList(){
+        bookStorage.clear();
+    }
 }
