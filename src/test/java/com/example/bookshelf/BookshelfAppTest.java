@@ -40,7 +40,7 @@ class BookshelfAppTest {
     }
 
     @Test
-    public void AddMethod_correctBody_shouldReturnStatus200() {
+    public void addMethod_correctBody_shouldReturnStatus200() {
         with().body(BOOK_1).when().post("/book/add").then().statusCode(200).body(startsWith("Book has been successfully added, id="));
     }
 
