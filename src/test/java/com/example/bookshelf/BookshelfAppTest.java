@@ -99,42 +99,4 @@ class BookshelfAppTest {
     public void getMethod_bookDoesNotExist_shouldReturnStatus404() {
         with().param("bookId", 12345).when().get("/book/get").then().statusCode(404);
     }
-
-    @Test
-    public void getAllMethod_0Books_shouldReturnStatus200() throws IOException {
-        bookshelfApp.storage.clearList();
-        when().get("/book/getAll").then().statusCode(200).body("", hasSize(0));
-    }
-
-    @Test
-    public void getAllMethod_1Book_shouldReturnStatus200() {
-        long bookId = addBookAndGetId(BOOK_1);
-
-        when().get("book/getAll").
-                then().statusCode(200)
-                .body("", hasSize(1))
-                .body("id", hasItem(bookId))
-                .body("title", hasItem("Java. Kompendium programisty"))
-                .body("author", hasItem("Herbert Schildt"))
-                .body("pagesSum", hasItem(1152))
-                .body("yearOfPublished", hasItem(2019))
-                .body("publishingHouse", hasItem("Helion"));
-    }
-
-    @Test
-    public void getAllMethod_2Books_shouldReturnStatus200() {
-        bookshelfApp.storage.clearList();
-        long bookId = addBookAndGetId(BOOK_1);
-        long bookId2 = addBookAndGetId(BOOK_2);
-
-        when().get("book/getAll").
-                then().statusCode(200)
-                .body("", hasSize(2))
-                .body("id", hasItems(bookId, bookId2))
-                .body("title", hasItems("Java. Kompendium programisty",  "Python. Wprowadzenie"))
-                .body("author", hasItems("Herbert Schildt", "Mark Lutz"))
-                .body("pagesSum", hasItems(1152, 1184))
-                .body("yearOfPublished", hasItems(2019, 2017))
-                .body("publishingHouse", hasItem("Helion"));
-    }
 }

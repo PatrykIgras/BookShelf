@@ -48,7 +48,7 @@ public class PostgresBookStorageImpl implements BookStorage {
                 book.setId(resultSet.getLong("book_id"));
                 book.setTitle(resultSet.getString("title"));
                 book.setAuthor(resultSet.getString("author"));
-                book.setPagesSum(resultSet.getInt("pages_sum"));
+                book.setPagesSum(resultSet.getInt("page_sum"));
                 book.setYearOfPublished(resultSet.getInt("year_of_published"));
                 book.setPublishingHouse(resultSet.getString("publishing_house"));
 
@@ -81,7 +81,7 @@ public class PostgresBookStorageImpl implements BookStorage {
                 book.setId(resultSet.getLong("book_id"));
                 book.setTitle(resultSet.getString("title"));
                 book.setAuthor(resultSet.getString("author"));
-                book.setPagesSum(resultSet.getInt("pages_sum"));
+                book.setPagesSum(resultSet.getInt("page_sum"));
                 book.setYearOfPublished(resultSet.getInt("year_of_published"));
                 book.setPublishingHouse(resultSet.getString("publishing_house"));
 
@@ -98,7 +98,7 @@ public class PostgresBookStorageImpl implements BookStorage {
 
     @Override
     public void addBook(Book book) {
-        final String sqlInsertBook = "INSERT INTO books(" + "book_id, title, author, pages_sum, year_of_published, publishing_house) " +
+        final String sqlInsertBook = "INSERT INTO books(" + "book_id, title, author, page_sum, year_of_published, publishing_house) " +
                 "VALUES (?, ?, ?, ?, ?, ?);";
         Connection connection = initializeDataBaseConnection();
         PreparedStatement preparedStatement = null;
@@ -120,7 +120,6 @@ public class PostgresBookStorageImpl implements BookStorage {
         }finally {
             closeDataBaseResources(connection, preparedStatement);
         }
-
     }
 
     private void closeDataBaseResources(Connection connection, Statement Statement) {
