@@ -65,7 +65,6 @@ public class BookController {
 
     public NanoHTTPD.Response serveAddBookRequest(NanoHTTPD.IHTTPSession session){
         ObjectMapper objectMapper = new ObjectMapper();
-        long randomBookId = System.currentTimeMillis();
 
         String lengthHeader = session.getHeaders().get("content-length");
         int contentLength = Integer.parseInt(lengthHeader);
@@ -75,13 +74,12 @@ public class BookController {
             session.getInputStream().read(buffer, 0, contentLength);
             String requestBody = new String(buffer).trim();
             Book requestBook = objectMapper.readValue(requestBody, Book.class);
-            requestBook.setId(randomBookId);
 
             bookStorage.addBook(requestBook);
         } catch (Exception e) {
             System.err.println("Error during process request: \n" + e);
             return newFixedLengthResponse(INTERNAL_ERROR, "text/plain", "Interal error book hasn't been added");
         }
-        return newFixedLengthResponse(OK, "text/plain", "Book has been successfully added, id=" + randomBookId);
+        return newFixedLengthResponse(OK, "text/plain", "Book has been successfully added");
     }
 }

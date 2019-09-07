@@ -1,5 +1,9 @@
 package com.example.bookshelf;
 
+import com.example.bookshelf.storage.impl.PostgresBookStorage;
+import com.example.bookshelf.type.Book;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +27,7 @@ class BookshelfAppTest {
     private static final int APP_PORT = 8091;
 
     private BookshelfApp bookshelfApp;
+    PostgresBookStorage postgresBookStorage = new PostgresBookStorage();
 
     @BeforeAll
     public static void beforeAll() {
@@ -39,9 +44,21 @@ class BookshelfAppTest {
         bookshelfApp.stop();
     }
 
+    private long addBook(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Book bookToAdd = null;
+
+        try {
+            bookToAdd = objectMapper.readValue(json, Book.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return postgresBookStorage.addBook(bookToAdd);
+    }
+
     @Test
     public void AddMethod_correctBody_shouldReturnStatus200() {
-        with().body(BOOK_1).when().post("/book/add").then().statusCode(200).body(startsWith("Book has been successfully added, id="));
+        with().body(BOOK_1).when().post("/book/add").then().statusCode(200).body(startsWith("Book has been successfully added"));
     }
 
     @Test
@@ -58,26 +75,15 @@ class BookshelfAppTest {
         with().body("{\"numberOfChapters\":10}").when().post("/book/add").then().statusCode(500);
     }
 
-    private long addBookAndGetId(String json) {
-        String responseText = with().body(json)
-                .when().post("/book/add")
-                .then().statusCode(200).body(startsWith("Book has been successfully added, id="))
-                .extract().body().asString();
-
-        String idStr = responseText.substring(responseText.indexOf("=") + 1);
-
-        return Long.parseLong(idStr);
-    }
-
     @Test
     public void getMethod_correctBookIdParam_shouldReturnStatus200() {
-        long bookId1 = addBookAndGetId(BOOK_1);
-        long bookId2 = addBookAndGetId(BOOK_2);
+        int id = (int) addBook(BOOK_1);
+        addBook(BOOK_2);
 
-        with().param("bookId", bookId1)
+        with().param("bookId", id)
                 .when().get("/book/get")
                 .then().statusCode(200)
-                .body("id", equalTo(bookId1))
+                .body("id", equalTo(id))
                 .body("title", equalTo("Java. Kompendium programisty"))
                 .body("author", equalTo("Herbert Schildt"))
                 .body("pagesSum", equalTo(1152))
@@ -100,19 +106,19 @@ class BookshelfAppTest {
         with().param("bookId", 12345).when().get("/book/get").then().statusCode(404);
     }
 
-//    @Test
-//    public void getAllMethod_0Books_shouldReturnStatus200() throws IOException {
-//        bookshelfApp.storage.clearList();
-//        when().get("/book/getAll").then().statusCode(200).body("", hasSize(0));
-//    }
+    @Test
+    public void getAllMethod_0Books_shouldReturnStatus200() throws IOException {
+        postgresBookStorage.clearDataBase();
+        when().get("/book/getAll").then().statusCode(200).body("", hasSize(0));
+    }
 
     @Test
     public void getAllMethod_1Book_shouldReturnStatus200() {
-        long bookId = addBookAndGetId(BOOK_1);
+        int id = (int) addBook(BOOK_1);
 
         when().get("book/getAll").
                 then().statusCode(200)
-                .body("id", hasItem(bookId))
+                .body("id", hasItem(id))
                 .body("title", hasItem("Java. Kompendium programisty"))
                 .body("author", hasItem("Herbert Schildt"))
                 .body("pagesSum", hasItem(1152))
@@ -120,20 +126,22 @@ class BookshelfAppTest {
                 .body("publishingHouse", hasItem("Helion"));
     }
 
-//    @Test
-//    public void getAllMethod_2Books_shouldReturnStatus200() {
-//        bookshelfApp.storage.clearList();
-//        long bookId = addBookAndGetId(BOOK_1);
-//        long bookId2 = addBookAndGetId(BOOK_2);
-//
-//        when().get("book/getAll").
-//                then().statusCode(200)
-//                .body("", hasSize(2))
-//                .body("id", hasItems(bookId, bookId2))
-//                .body("title", hasItems("Java. Kompendium programisty",  "Python. Wprowadzenie"))
-//                .body("author", hasItems("Herbert Schildt", "Mark Lutz"))
-//                .body("pagesSum", hasItems(1152, 1184))
-//                .body("yearOfPublished", hasItems(2019, 2017))
-//                .body("publishingHouse", hasItem("Helion"));
-//    }
+    @Test
+    public void getAllMethod_2Books_shouldReturnStatus200() {
+
+        postgresBookStorage.clearDataBase();
+
+        int id1 = (int) addBook(BOOK_1);
+        int id2 = (int) addBook(BOOK_2);
+
+        when().get("book/getAll").
+                then().statusCode(200)
+                .body("", hasSize(2))
+                .body("id", hasItems(id1, id2))
+                .body("title", hasItems("Java. Kompendium programisty",  "Python. Wprowadzenie"))
+                .body("author", hasItems("Herbert Schildt", "Mark Lutz"))
+                .body("pagesSum", hasItems(1152, 1184))
+                .body("yearOfPublished", hasItems(2019, 2017))
+                .body("publishingHouse", hasItem("Helion"));
+    }
 }
