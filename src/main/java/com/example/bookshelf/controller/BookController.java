@@ -1,6 +1,7 @@
 package com.example.bookshelf.controller;
 
 import com.example.bookshelf.storage.BookStorage;
+import com.example.bookshelf.storage.impl.PostgresBookStorage;
 import com.example.bookshelf.storage.impl.StaticListBookStorageImpl;
 import com.example.bookshelf.type.Book;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +17,7 @@ import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 public class BookController {
     private final static String BOOK_ID_PARAM_NAME = "bookId";
 
-    private BookStorage bookStorage = new StaticListBookStorageImpl();
+    private BookStorage bookStorage = new PostgresBookStorage();
 
     public NanoHTTPD.Response serveGetBookRequest(NanoHTTPD.IHTTPSession session){
 
