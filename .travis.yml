@@ -5,6 +5,9 @@ before_script:
   - psql -c 'create database book_store_db;' -U postgres
 addons:
   postgresql: "9.6"
+  apt:
+    packages:
+      - testing-postgresql-server
 env:
   global:
     - PGPORT=5432

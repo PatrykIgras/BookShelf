@@ -55,6 +55,12 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.6</version>
         </dependency>
+        <dependency>
+            <groupId>io.airlift</groupId>
+            <artifactId>testing-postgresql-server</artifactId>
+            <version>9.6.3-3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
