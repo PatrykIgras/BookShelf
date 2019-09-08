@@ -42,6 +42,7 @@ class BookshelfAppTest {
     @AfterEach
     public void afterEach() {
         bookshelfApp.stop();
+        postgresBookStorage.clearDataBase();
     }
 
     private long addBook(String json) {
@@ -108,7 +109,6 @@ class BookshelfAppTest {
 
     @Test
     public void getAllMethod_0Books_shouldReturnStatus200() throws IOException {
-        postgresBookStorage.clearDataBase();
         when().get("/book/getAll").then().statusCode(200).body("", hasSize(0));
     }
 
@@ -128,9 +128,6 @@ class BookshelfAppTest {
 
     @Test
     public void getAllMethod_2Books_shouldReturnStatus200() {
-
-        postgresBookStorage.clearDataBase();
-
         int id1 = (int) addBook(BOOK_1);
         int id2 = (int) addBook(BOOK_2);
 
