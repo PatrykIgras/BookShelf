@@ -177,7 +177,7 @@ class BookshelfAppTest {
     }
 
     @Test
-    public void deleteBookMethod_noParamIn_shouldReturnStatus400(){
+    public void deleteBookMethod_noParamInRequest_shouldReturnStatus400(){
         int id2 = (int) addBook(BOOK_2);
 
         with().when().delete("/book/delete")
