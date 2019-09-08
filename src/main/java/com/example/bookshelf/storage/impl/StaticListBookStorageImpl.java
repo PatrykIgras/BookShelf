@@ -15,8 +15,8 @@ public class StaticListBookStorageImpl implements BookStorage {
 
     @Override
     public Book getBook(long id) {
-        for (Book book : bookStorage){
-            if (book.getId() == id){
+        for (Book book : bookStorage) {
+            if (book.getId() == id) {
                 return book;
             }
         }
@@ -34,7 +34,12 @@ public class StaticListBookStorageImpl implements BookStorage {
         return book.getId();
     }
 
-    public void clearList(){
+    @Override
+    public void deleteBook(long id) {
+
+    }
+
+    public void clearList() {
         bookStorage.clear();
     }
 }

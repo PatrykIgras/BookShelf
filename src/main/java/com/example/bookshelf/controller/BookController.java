@@ -19,26 +19,51 @@ public class BookController {
     private final static String BOOK_ID_PARAM_NAME = "bookId";
 
     private BookStorage bookStorage = new PostgresBookStorage();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public NanoHTTPD.Response serveGetBookRequest(NanoHTTPD.IHTTPSession session){
+    public NanoHTTPD.Response serveDeleteBookRequest(NanoHTTPD.IHTTPSession session) {
 
         Map<String, List<String>> requestParameters = session.getParameters();
-        if (requestParameters.containsKey(BOOK_ID_PARAM_NAME)){
+        if (requestParameters.containsKey(BOOK_ID_PARAM_NAME)) {
             List<String> bookIdParams = requestParameters.get(BOOK_ID_PARAM_NAME);
             String bookIdParam = bookIdParams.get(0);
             long bookId = 0;
 
             try {
                 bookId = Long.parseLong(bookIdParam);
-            }catch (NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 System.err.println("Error during convert request param: \n" + nfe);
                 return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Request param 'bookId' have to be a number");
             }
 
             Book book = bookStorage.getBook(bookId);
-            if (book != null){
+            if (book != null) {
+                bookStorage.deleteBook(bookId);
+                return newFixedLengthResponse(OK, "text/plain", "Book has been successfully removed");
+            }
+            return newFixedLengthResponse(NOT_FOUND, "application/json", "Data Base not have book with request id");
+        }
+        return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
+    }
+
+    public NanoHTTPD.Response serveGetBookRequest(NanoHTTPD.IHTTPSession session) {
+
+        Map<String, List<String>> requestParameters = session.getParameters();
+        if (requestParameters.containsKey(BOOK_ID_PARAM_NAME)) {
+            List<String> bookIdParams = requestParameters.get(BOOK_ID_PARAM_NAME);
+            String bookIdParam = bookIdParams.get(0);
+            long bookId = 0;
+
+            try {
+                bookId = Long.parseLong(bookIdParam);
+            } catch (NumberFormatException nfe) {
+                System.err.println("Error during convert request param: \n" + nfe);
+                return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Request param 'bookId' have to be a number");
+            }
+
+            Book book = bookStorage.getBook(bookId);
+            if (book != null) {
                 try {
-                    ObjectMapper objectMapper = new ObjectMapper();
                     String response = objectMapper.writeValueAsString(book);
                     return newFixedLengthResponse(OK, "application/json", response);
                 } catch (JsonProcessingException e) {
@@ -51,8 +76,8 @@ public class BookController {
         return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
     }
 
-    public NanoHTTPD.Response serveGetBooksRequest(NanoHTTPD.IHTTPSession session){
-        ObjectMapper objectMapper = new ObjectMapper();
+    public NanoHTTPD.Response serveGetBooksRequest(NanoHTTPD.IHTTPSession session) {
+
         String response = "";
 
         try {
@@ -64,8 +89,7 @@ public class BookController {
         return newFixedLengthResponse(OK, "application/json", response);
     }
 
-    public NanoHTTPD.Response serveAddBookRequest(NanoHTTPD.IHTTPSession session){
-        ObjectMapper objectMapper = new ObjectMapper();
+    public NanoHTTPD.Response serveAddBookRequest(NanoHTTPD.IHTTPSession session) {
 
         String lengthHeader = session.getHeaders().get("content-length");
         int contentLength = Integer.parseInt(lengthHeader);
