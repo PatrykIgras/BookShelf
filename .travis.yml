@@ -4,7 +4,7 @@ services:
 before_script:
   - cp config/database.yml config/database.yml
 addons:
-  postgresql: "9.6"
+  postgresql: "11.2"
 env:
   global:
     - PGPORT=5432
