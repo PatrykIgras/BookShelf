@@ -2,9 +2,9 @@ language: java
 services:
   - postgresql
 before_script:
-  - cp config/database.yml.travis config/database.yml.travis
+  - cp config/database.yml config/database.yml
 addons:
-  postgresql: "11.2"
+  postgresql: "9.6"
 env:
   global:
     - PGPORT=5432
