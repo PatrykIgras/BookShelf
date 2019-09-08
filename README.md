@@ -13,3 +13,6 @@ The data is stored in PostgreSQL DataBase.
 - REST-Assured
 - JUnit
 - Travis CI
+
+
+Check out the resources directory to create data base.

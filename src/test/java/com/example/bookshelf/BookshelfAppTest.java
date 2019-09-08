@@ -36,8 +36,7 @@ class BookshelfAppTest {
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        bookshelfApp = new BookshelfApp(APP_PORT);
-    }
+        bookshelfApp = new BookshelfApp(APP_PORT); }
 
     @AfterEach
     public void afterEach() {

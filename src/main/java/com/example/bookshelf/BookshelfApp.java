@@ -1,6 +1,6 @@
 package com.example.bookshelf;
 
-import com.example.bookshelf.storage.PostgresBookStorageImpl;
+import com.example.bookshelf.storage.impl.PostgresBookStorage;
 import com.example.bookshelf.storage.impl.StaticListBookStorageImpl;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public class BookshelfApp extends NanoHTTPD {
     RequestUrlMapper requestUrlMapper = new RequestUrlMapper();
-    PostgresBookStorageImpl storage = new PostgresBookStorageImpl();
+    PostgresBookStorage storage = new PostgresBookStorage();
+
     public BookshelfApp(int port) throws IOException {
         super(port);
         start(5000, false);
