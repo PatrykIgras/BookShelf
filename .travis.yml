@@ -2,7 +2,7 @@ language: java
 services:
   - postgresql
 before_script:
-      - psql -c 'create database book_store_db;' -U postgres
+  - cp config/database.yml.travis config/database.yml
 addons:
   postgresql: "9.6"
 env:
