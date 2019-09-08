@@ -135,7 +135,7 @@ public class PostgresBookStorage implements BookStorage {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 id = resultSet.getLong(1);
             }
 
@@ -148,7 +148,27 @@ public class PostgresBookStorage implements BookStorage {
         return id;
     }
 
-    public void clearDataBase(){
+    @Override
+    public void deleteBook(long id) {
+        final String sqlDeleteBook = "DELETE FROM books WHERE book_id = ?;";
+
+        Connection connection = initializeConnection();
+        PreparedStatement preparedStatement = null;
+
+        try {
+            preparedStatement = connection.prepareStatement(sqlDeleteBook);
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error while execute sql querry: \n" + e);
+            throw new RuntimeException("Error while execute sql querry");
+        } finally {
+            closeDataBaseConnection(connection, preparedStatement);
+        }
+    }
+
+    public void clearDataBase() {
         final String sqlClearDB = "DELETE FROM books;";
 
         Connection connection = initializeConnection();
@@ -159,7 +179,7 @@ public class PostgresBookStorage implements BookStorage {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             closeDataBaseConnection(connection, statement);
         }
     }

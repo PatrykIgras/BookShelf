@@ -36,7 +36,8 @@ class BookshelfAppTest {
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        bookshelfApp = new BookshelfApp(APP_PORT); }
+        bookshelfApp = new BookshelfApp(APP_PORT);
+    }
 
     @AfterEach
     public void afterEach() {
@@ -137,10 +138,50 @@ class BookshelfAppTest {
                 then().statusCode(200)
                 .body("", hasSize(2))
                 .body("id", hasItems(id1, id2))
-                .body("title", hasItems("Java. Kompendium programisty",  "Python. Wprowadzenie"))
+                .body("title", hasItems("Java. Kompendium programisty", "Python. Wprowadzenie"))
                 .body("author", hasItems("Herbert Schildt", "Mark Lutz"))
                 .body("pagesSum", hasItems(1152, 1184))
                 .body("yearOfPublished", hasItems(2019, 2017))
                 .body("publishingHouse", hasItem("Helion"));
+    }
+
+    @Test
+    public void deleteBookMethod_correctParam_shouldReturnStatus200() {
+        int id1 = (int) addBook(BOOK_1);
+        int id2 = (int) addBook(BOOK_2);
+
+        with().param("bookId", id1)
+                .when().delete("/book/delete")
+                .then().statusCode(200)
+                .body(startsWith("Book has been successfully removed"));
+    }
+
+    @Test
+    public void deleteBookMethod_bookDoesNotExist_shouldReturnStatus404(){
+        int id2 = (int) addBook(BOOK_2);
+
+        with().param("bookId", -1)
+                .when().delete("/book/delete")
+                .then().statusCode(404)
+                .body(startsWith("Data Base not have book with request id"));
+    }
+
+    @Test
+    public void deleteBookMethod_uncorrectParam_shouldReturnStatus400(){
+        int id2 = (int) addBook(BOOK_2);
+
+        with().param("bookId", "text")
+                .when().delete("/book/delete")
+                .then().statusCode(400)
+                .body(startsWith("Request param 'bookId' have to be a number"));
+    }
+
+    @Test
+    public void deleteBookMethod_noParamIn_shouldReturnStatus400(){
+        int id2 = (int) addBook(BOOK_2);
+
+        with().when().delete("/book/delete")
+                .then().statusCode(400)
+                .body(startsWith("Uncorrected request params"));
     }
 }
