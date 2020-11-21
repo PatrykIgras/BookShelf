@@ -7,7 +7,7 @@ addons:
     organization: "must1"
     token:
       secure: 8c11bdfaf1350de68bfa2e2678ff8d12f70deaf0 # encrypted value of your token
-    postgresql: '11.1'
+    postgresql: '13.1'
 
 services:
   - postgresql
