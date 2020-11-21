@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostgresBookStorage implements BookStorage {
-    private static final String POSTGRES_JDBC_URL = "jdbc:postgresql://localhost:5432/book_storage_db";
+    private static final String POSTGRES_JDBC_URL = "jdbc:postgresql://localhost:5432/book_store_db";
     private static final String POSTGRES_USER_NAME = "postgres";
-    private static final String POSTGRES_USER_PASS = "password";
+    private static final String POSTGRES_USER_PASS = "Patrys90";
 
     static {
         try {
