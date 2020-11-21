@@ -3,10 +3,6 @@ sudo: required
 language: java
 
 addons:
-  sonarcloud:
-    organization: "must1"
-    token:
-      secure: 8c11bdfaf1350de68bfa2e2678ff8d12f70deaf0 # encrypted value of your token
     postgresql: '13.1'
 
 services:
@@ -20,7 +16,6 @@ before_install:
   - sudo apt-get install -y postgresql-11 postgresql-client-11
   - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
   - sudo service postgresql restart 11
-
 
 env:
   global:
